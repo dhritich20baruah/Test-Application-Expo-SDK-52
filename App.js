@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TouchableOpacity } from "react-native";
 import Notes from "./components/Notes/NotesScreen";
 import AddNote from "./components/Notes/AddNote";
+import ViewNote from "./components/Notes/ViewNote";
 
 function HomeScreen({ navigation }) {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="NotesScreen" component={Notes} />
         <Stack.Screen name="AddNote" component={AddNote}/>
+        <Stack.Screen name="ViewNote" component={ViewNote}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

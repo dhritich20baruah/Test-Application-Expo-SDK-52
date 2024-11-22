@@ -47,7 +47,25 @@ export function NoteList() {
   async function fetchNotes() {
     const result = await db.getAllAsync("SELECT * FROM notesTable");
     setNotes(result);
-    console.log("notes:", result);
+  }
+
+  const viewNote = async (id) => {
+    try {
+        navigation.navigate("ViewNote", {id})
+    } catch (error) {
+        console.error(error)
+    }
+  }
+
+  const deleteNote = async (id) => {
+    try {
+        await db.runAsync("DELETE FROM notesTable WHERE id = ?", [id]);
+        let lastNote = [...notes].filter((note)=>note.id != id);
+        setNotes(lastNote);
+        Alert.alert("Note deleted")
+    } catch (error) {
+        console.error("Could not delete note. ", error)
+    }
   }
   return (
     <SafeAreaView
@@ -76,10 +94,10 @@ export function NoteList() {
                 >
                   <Text style={{ fontSize: 15, fontStyle: "italic", color: "red" }}>{item.date}</Text>
                   <TouchableOpacity>
-                    <Text><Ionicons name="trash-outline" size={25} color="red"/></Text>
+                    <Text onPress={()=>deleteNote(item.id)}><Ionicons name="trash-outline" size={25} color="red"/></Text>
                   </TouchableOpacity>
                 </View>
-                <Text style={{ fontSize: 15 }}>{item.note.slice(0, 50)}......</Text>
+                <Text style={{ fontSize: 15 }} onPress={()=>viewNote(item.id)}>{item.note.slice(0, 50)}......</Text>
               </View>
             </View>
           );
