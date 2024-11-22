@@ -1,6 +1,6 @@
 // In App.js in a new project
 
-import * as React from "react";
+import {useEffect, useCallback} from "react";
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -10,7 +10,21 @@ import AddNote from "./components/Notes/AddNote";
 import ViewNote from "./components/Notes/ViewNote";
 
 function HomeScreen({ navigation }) {
-  return (
+  useEffect(()=>{
+    checkPreviousScreen()
+  }, [])
+
+  const checkPreviousScreen = () => {
+    const state = navigation.getState();
+    const currentIndex = state.index;
+    const previousRoute = state.routes[currentIndex + 1];
+
+    console.log(state);
+    // if(previousRoute && (previousRoute.name === "AddNote" || previousRoute.name === "ViewNote")){
+    //   navigation.navigate("NotesScreen")
+    // }
+  }
+   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <TouchableOpacity
         style={{
@@ -24,10 +38,7 @@ function HomeScreen({ navigation }) {
         <Text
           style={{ textAlign: "center", color: "red" }}
           onPress={() =>
-            navigation.navigate("NotesScreen", {
-              itemId: 86,
-              otherParam: "anything you want here",
-            })
+            navigation.navigate("NotesScreen")
           }
         >
           Notes

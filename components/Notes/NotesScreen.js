@@ -6,9 +6,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import {
+  useNavigation,
+  useFocusEffect,
+  useIsFocused,
+} from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const initializeDB = async (db) => {
@@ -35,38 +39,37 @@ export function NoteList() {
   const db = useSQLiteContext();
   const [notes, setNotes] = useState([]);
   const navigation = useNavigation();
-
-  useFocusEffect(
-    useCallback(() => {
-      (async () => {
-        await fetchNotes();
-      })();
-    }, [])
-  );
+  const isFocused = useIsFocused();
 
   async function fetchNotes() {
     const result = await db.getAllAsync("SELECT * FROM notesTable");
     setNotes(result);
   }
 
+  useEffect(() => {
+    if (isFocused) {
+      fetchNotes();
+    }
+  }, [isFocused]);
+
   const viewNote = async (id) => {
     try {
-        navigation.navigate("ViewNote", {id})
+      navigation.navigate("ViewNote", { id });
     } catch (error) {
-        console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const deleteNote = async (id) => {
     try {
-        await db.runAsync("DELETE FROM notesTable WHERE id = ?", [id]);
-        let lastNote = [...notes].filter((note)=>note.id != id);
-        setNotes(lastNote);
-        Alert.alert("Note deleted")
+      await db.runAsync("DELETE FROM notesTable WHERE id = ?", [id]);
+      let lastNote = [...notes].filter((note) => note.id != id);
+      setNotes(lastNote);
+      Alert.alert("Note deleted");
     } catch (error) {
-        console.error("Could not delete note. ", error)
+      console.error("Could not delete note. ", error);
     }
-  }
+  };
   return (
     <SafeAreaView
       style={{ flex: 1, padding: 10, position: "relative", height: "100%" }}
@@ -92,12 +95,23 @@ export function NoteList() {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text style={{ fontSize: 15, fontStyle: "italic", color: "red" }}>{item.date}</Text>
+                  <Text
+                    style={{ fontSize: 15, fontStyle: "italic", color: "red" }}
+                  >
+                    {item.date}
+                  </Text>
                   <TouchableOpacity>
-                    <Text onPress={()=>deleteNote(item.id)}><Ionicons name="trash-outline" size={25} color="red"/></Text>
+                    <Text onPress={() => deleteNote(item.id)}>
+                      <Ionicons name="trash-outline" size={25} color="red" />
+                    </Text>
                   </TouchableOpacity>
                 </View>
-                <Text style={{ fontSize: 15 }} onPress={()=>viewNote(item.id)}>{item.note.slice(0, 50)}......</Text>
+                <Text
+                  style={{ fontSize: 15 }}
+                  onPress={() => viewNote(item.id)}
+                >
+                  {item.note.slice(0, 50)}......
+                </Text>
               </View>
             </View>
           );

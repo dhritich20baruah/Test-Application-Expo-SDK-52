@@ -28,7 +28,6 @@ export function EditNote(id) {
         "SELECT note FROM notesTable WHERE id = ?",
         [noteID]
       );
-      console.log("Fetched Note: ", result.note);
       setNote(result.note)
     } catch (error) {
       console.error("Unable to fetch note: ", error);
@@ -41,7 +40,7 @@ export function EditNote(id) {
       "UPDATE notesTable SET note = ? WHERE id = ?",
       [text, noteID]
     );
-    navigation.goBack();
+    navigation.navigate("NotesScreen");
   };
 
   return (
@@ -54,7 +53,7 @@ export function EditNote(id) {
         placeholder="Type your notes here..."
         textAlignVertical="top"
       />
-      <Button title="ADD NOTE" onPress={updateNote} />
+      <Button title="UPDATE NOTE" onPress={updateNote} />
     </View>
   );
 }
