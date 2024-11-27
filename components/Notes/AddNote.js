@@ -34,7 +34,7 @@ export function NoteInput() {
 
     await db.runAsync("INSERT INTO notesTable (date, note) values (?, ?)", [date, note]);
     Alert.alert("Note Added");
-    navigation.navigate("NotesScreen");
+    navigation.replace("NotesScreen");
   }
 
   return (

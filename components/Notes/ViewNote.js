@@ -40,7 +40,7 @@ export function EditNote(id) {
       "UPDATE notesTable SET note = ? WHERE id = ?",
       [text, noteID]
     );
-    navigation.navigate("NotesScreen");
+    navigation.replace("NotesScreen");
   };
 
   return (
