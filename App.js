@@ -9,22 +9,10 @@ import Notes from "./components/Notes/NotesScreen";
 import AddNote from "./components/Notes/AddNote";
 import ViewNote from "./components/Notes/ViewNote";
 import Camera from "./components/Camera/Camera";
+import Media from "./components/MediaLibrary/Media";
 
 function HomeScreen({ navigation }) {
-  useEffect(()=>{
-    checkPreviousScreen()
-  }, [])
-
-  const checkPreviousScreen = () => {
-    const state = navigation.getState();
-    const currentIndex = state.index;
-    const previousRoute = state.routes[currentIndex + 1];
-
-    console.log(state);
-    // if(previousRoute && (previousRoute.name === "AddNote" || previousRoute.name === "ViewNote")){
-    //   navigation.navigate("NotesScreen")
-    // }
-  }
+  
    return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <TouchableOpacity
@@ -65,6 +53,25 @@ function HomeScreen({ navigation }) {
           Camera
         </Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: "80%",
+          padding: 5,
+          borderColor: "red",
+          borderWidth: 1,
+          borderRadius: 15,
+          marginVertical: 10
+        }}
+      >
+        <Text
+          style={{ textAlign: "center", color: "red" }}
+          onPress={() =>
+            navigation.navigate("MediaLibrary")
+          }
+        >
+          Media Library
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -80,6 +87,7 @@ function App() {
         <Stack.Screen name="AddNote" component={AddNote}/>
         <Stack.Screen name="ViewNote" component={ViewNote}/>
         <Stack.Screen name="Camera" component={Camera}/>
+        <Stack.Screen name="MediaLibrary" component={Media}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
