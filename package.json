@@ -12,14 +12,12 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "expo": "~52.0.8",
+    "expo-sqlite": "~15.0.3",
     "expo-status-bar": "~2.0.0",
     "react": "18.3.1",
     "react-native": "0.76.2",
     "react-native-safe-area-context": "4.12.0",
-    "react-native-screens": "~4.1.0",
-    "expo-sqlite": "~15.0.3",
-    "expo-camera": "~16.0.7",
-    "expo-media-library": "~17.0.3"
+    "react-native-screens": "~4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
