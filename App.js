@@ -8,7 +8,7 @@ import { TouchableOpacity } from "react-native";
 import Notes from "./components/Notes/NotesScreen";
 import AddNote from "./components/Notes/AddNote";
 import ViewNote from "./components/Notes/ViewNote";
-
+// import "expo-dev-client"
 
 function HomeScreen({ navigation }) {
   
