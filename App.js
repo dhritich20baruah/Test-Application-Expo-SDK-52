@@ -8,6 +8,8 @@ import { TouchableOpacity } from "react-native";
 import Notes from "./components/Notes/NotesScreen";
 import AddNote from "./components/Notes/AddNote";
 import ViewNote from "./components/Notes/ViewNote";
+import Media from "./components/MediaLibraryCamera/MediaLibrary";
+import CameraFunction from "./components/MediaLibraryCamera/CameraFunction";
 // import "expo-dev-client"
 
 function HomeScreen({ navigation }) {
@@ -33,6 +35,25 @@ function HomeScreen({ navigation }) {
           Notes
         </Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: "80%",
+          padding: 5,
+          borderColor: "red",
+          borderWidth: 1,
+          borderRadius: 15,
+          marginVertical: 10
+        }}
+      >
+        <Text
+          style={{ textAlign: "center", color: "red" }}
+          onPress={() =>
+            navigation.navigate("MediaLibrary")
+          }
+        >
+          Media Library / Camera
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -47,6 +68,8 @@ function App() {
         <Stack.Screen name="NotesScreen" component={Notes} />
         <Stack.Screen name="AddNote" component={AddNote}/>
         <Stack.Screen name="ViewNote" component={ViewNote}/>
+        <Stack.Screen name="MediaLibrary" component={Media}/>
+        <Stack.Screen name="Camera" component={CameraFunction}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
