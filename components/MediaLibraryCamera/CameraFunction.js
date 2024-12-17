@@ -1,10 +1,25 @@
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { useState } from 'react';
+import { CameraView, CameraType, useCameraPermissions, Camera } from 'expo-camera';
+import { useState, useRef, useEffect } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Ionicons from "@expo/vector-icons/Ionicons";
+import * as MediaLibrary from "expo-media-library";
 
 export default function CameraFunction() {
   const [facing, setFacing] = useState('back');
-  const [permission, requestPermission] = useCameraPermissions();
+  const [permission, requestPermission] = useCameraPermissions(); //Camera Permission State
+  const [hasMediaLibPermit, setHasMediaLibPermit] = useState(); //Media Permission State
+  let cameraRef = useRef();
+  const [photo, setPhoto] = useState();
+
+  useEffect(() => {
+    (async () => {
+      const cameraPermission = await Camera.requestCameraPermissionsAsync();
+      const mediaLibraryPermission =
+        await MediaLibrary.requestPermissionsAsync();
+      setHasCameraPermission(cameraPermission.status === "granted");
+      setHasMediaLibPermit(mediaLibraryPermission.status === "granted");
+    })();
+  }, []);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -25,12 +40,32 @@ export default function CameraFunction() {
     setFacing(current => (current === 'back' ? 'front' : 'back'));
   }
 
+  let takePic = async () => {
+    let options = {
+      quality: 1,
+      base64: true,
+      exif: false,
+    };
+
+    let newPhoto = await cameraRef.current.takePictureAsync(options);
+    setPhoto(newPhoto);
+  };
+
+  if (photo) {
+    let savePhoto = async () => {
+      const asset = await MediaLibrary.createAssetAsync(photo.uri);
+    };
+  }
+
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing}>
+      <CameraView style={styles.camera} facing={facing}  ref={cameraRef}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
+          <Ionicons name="camera-reverse-outline" size={40} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={takePic}>
+          <Ionicons name="aperture-outline" size={40} color="white" />
           </TouchableOpacity>
         </View>
       </CameraView>
