@@ -2,14 +2,36 @@ import {
   CameraView,
   CameraType,
   useCameraPermissions,
-  Camera, FlashMode
+  Camera,
+  FlashMode,
 } from "expo-camera";
 import { useState, useRef, useEffect } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as MediaLibrary from "expo-media-library";
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
-export default function CameraFunction() {
+const initializeDB = async (db) => {
+  try {
+    await db.execAsync(`
+        PRAGMA journal_mode = WAL;
+        CREATE TABLE IF NOT EXISTS gallery (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, uri TEXT, notes TEXT);   
+        `);
+    console.log("DB connected");
+  } catch (error) {
+    console.log("Error in connecting DB", error);
+  }
+};
+
+export default function CameraApp() {
+  return (
+    <SQLiteProvider databaseName="SDK52Test.db" onInit={initializeDB}>
+      <CameraFunction />
+    </SQLiteProvider>
+  );
+}
+
+export function CameraFunction() {
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions(); //Camera Permission State
   const [hasMediaLibPermit, setHasMediaLibPermit] = useState(); //Media Permission State
@@ -45,11 +67,7 @@ export default function CameraFunction() {
   }
 
   const toggleFlash = () => {
-    setFlashMode(
-      flashMode === "on"
-        ? "off"
-        : "on"
-    );
+    setFlashMode(flashMode === "on" ? "off" : "on");
   };
 
   function toggleCameraFacing() {
