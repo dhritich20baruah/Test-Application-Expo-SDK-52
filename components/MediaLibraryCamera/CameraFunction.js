@@ -6,7 +6,16 @@ import {
   FlashMode,
 } from "expo-camera";
 import { useState, useRef, useEffect } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as MediaLibrary from "expo-media-library";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
@@ -32,12 +41,14 @@ export default function CameraApp() {
 }
 
 export function CameraFunction() {
+  const db = useSQLiteContext();
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions(); //Camera Permission State
   const [hasMediaLibPermit, setHasMediaLibPermit] = useState(); //Media Permission State
   let cameraRef = useRef();
   const [photo, setPhoto] = useState();
   const [flashMode, setFlashMode] = useState("off");
+  const [notes, setNotes] = useState("")
 
   useEffect(() => {
     (async () => {
@@ -88,7 +99,42 @@ export function CameraFunction() {
   if (photo) {
     let savePhoto = async () => {
       const asset = await MediaLibrary.createAssetAsync(photo.uri);
+      let dateString = new Date().toISOString();
+      let date = dateString
+        .slice(0, dateString.indexOf("T"))
+        .split("-")
+        .reverse()
+        .join("-");
     };
+    return (
+      <SafeAreaView style={styles.container}>
+        <Image
+          style={styles.preview}
+          source={{ uri: "data:image/jpg;base64," + photo.base64 }}
+        />
+        <View>
+          <TextInput
+            style={styles.input}
+            placeholder="Notes"
+            value={notes}
+            onChangeText={setNotes}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          {hasMediaLibPermit ? (
+            <TouchableOpacity onPress={savePhoto} style={styles.button}>
+              <Ionicons name="save-outline" size={40} color="white" />
+            </TouchableOpacity>
+          ) : undefined}
+          <TouchableOpacity
+            onPress={() => setPhoto(undefined)}
+            style={styles.button}
+          >
+            <Ionicons name="trash-outline" size={40} color="white" />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -159,4 +205,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
+  input: {
+    borderColor: "black",
+    fontSize: 20
+  }
 });
