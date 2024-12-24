@@ -107,22 +107,22 @@ export function CameraFunction() {
         .join("-");
     };
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.imageContainer}>
         <Image
           style={styles.preview}
           source={{ uri: "data:image/jpg;base64," + photo.base64 }}
         />
-        <View>
+        {/* <View>
           <TextInput
             style={styles.input}
             placeholder="Notes"
             value={notes}
             onChangeText={setNotes}
           />
-        </View>
-        <View style={styles.buttonContainer}>
+        </View> */}
+        <View style={styles.btnContainer}>
           {hasMediaLibPermit ? (
-            <TouchableOpacity onPress={savePhoto} style={styles.button}>
+            <TouchableOpacity onPress={savePhoto} style={styles.btn}>
               <Ionicons name="save-outline" size={40} color="white" />
             </TouchableOpacity>
           ) : undefined}
@@ -182,6 +182,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  imageContainer: {
+    height: "95%",
+    width: "100%"
+  },
   message: {
     textAlign: "center",
     paddingBottom: 10,
@@ -200,10 +204,21 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     alignItems: "center",
   },
+  btnContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    backgroundColor: "black"
+  },
   text: {
     fontSize: 24,
     fontWeight: "bold",
     color: "white",
+  },
+  btn: {
+    justifyContent: "center",
+    margin: 10,
+    elevation: 5,
   },
   input: {
     borderColor: "black",
