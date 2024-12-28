@@ -3,7 +3,6 @@ import {
   CameraType,
   useCameraPermissions,
   Camera,
-  FlashMode,
 } from "expo-camera";
 import { useState, useRef, useEffect } from "react";
 import {
@@ -47,7 +46,7 @@ export function CameraFunction() {
   const [hasMediaLibPermit, setHasMediaLibPermit] = useState(); //Media Permission State
   let cameraRef = useRef();
   const [photo, setPhoto] = useState();
-  const [flashMode, setFlashMode] = useState("off");
+  const [flashMode, setFlashMode] = useState("on");
   const [notes, setNotes] = useState("")
 
   useEffect(() => {
@@ -78,7 +77,7 @@ export function CameraFunction() {
   }
 
   const toggleFlash = () => {
-    setFlashMode(flashMode === "on" ? "off" : "on");
+    setFlashMode((current) => (current === "on" ? "off" : "on"));
   };
 
   function toggleCameraFacing() {
@@ -94,6 +93,7 @@ export function CameraFunction() {
 
     let newPhoto = await cameraRef.current.takePictureAsync(options);
     setPhoto(newPhoto);
+    console.log("URI", photo.uri)
   };
 
   if (photo) {
@@ -110,27 +110,27 @@ export function CameraFunction() {
       <SafeAreaView style={styles.imageContainer}>
         <Image
           style={styles.preview}
-          source={{ uri: "data:image/jpg;base64," + photo.base64 }}
+          source={{ uri: photo.uri }}
         />
-        {/* <View>
+        <View>
           <TextInput
             style={styles.input}
             placeholder="Notes"
             value={notes}
             onChangeText={setNotes}
           />
-        </View> */}
+        </View>
         <View style={styles.btnContainer}>
-          {hasMediaLibPermit ? (
+          {!hasMediaLibPermit ? (
             <TouchableOpacity onPress={savePhoto} style={styles.btn}>
-              <Ionicons name="save-outline" size={40} color="white" />
+              <Ionicons name="save-outline" size={30} color="black" />
             </TouchableOpacity>
           ) : undefined}
           <TouchableOpacity
             onPress={() => setPhoto(undefined)}
-            style={styles.button}
+            style={styles.btn}
           >
-            <Ionicons name="trash-outline" size={40} color="white" />
+            <Ionicons name="trash-outline" size={30} color="black" />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
-    backgroundColor: "black"
+    backgroundColor: "white"
   },
   text: {
     fontSize: 24,
@@ -223,5 +223,10 @@ const styles = StyleSheet.create({
   input: {
     borderColor: "black",
     fontSize: 20
-  }
+  },
+  preview: {
+    alignSelf: "stretch",
+    flex: 1,
+    width: "auto",
+  },
 });
