@@ -145,32 +145,39 @@ export function CameraFunction() {
         ref={cameraRef}
         flash={flashMode}
       >
+        <View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Ionicons name="camera-reverse-outline" size={40} color="white" />
+            <Ionicons name="camera-reverse-outline" size={20} color="white" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={takePic}>
-            <Ionicons name="aperture-outline" size={40} color="white" />
+            <Ionicons name="camera-outline" size={20} color="white" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={toggleFlash}>
             <Text>
               {flashMode === "on" ? (
                 <Ionicons
                   name="flash-outline"
-                  size={40}
+                  size={20}
                   color="white"
                   style={styles.btnText}
                 />
               ) : (
                 <Ionicons
                   name="flash-off-outline"
-                  size={40}
+                  size={20}
                   color="white"
                   style={styles.btnText}
                 />
               )}
             </Text>
           </TouchableOpacity>
+        </View>
+        <View style={styles.shutterContainer}>
+        <TouchableOpacity style={styles.button} onPress={takePic}>
+            <Ionicons name="aperture-outline" size={40} color="white" />
+          </TouchableOpacity>
+        </View>
         </View>
       </CameraView>
     </View>
@@ -194,10 +201,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    flex: 1,
     flexDirection: "row",
     backgroundColor: "transparent",
-    margin: 64,
+    marginVertical: 20
+  },
+  shutterContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 20
   },
   button: {
     flex: 1,

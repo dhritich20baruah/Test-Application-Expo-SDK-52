@@ -1,6 +1,3 @@
-// In App.js in a new project
-
-import {useEffect, useCallback} from "react";
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -48,10 +45,29 @@ function HomeScreen({ navigation }) {
         <Text
           style={{ textAlign: "center", color: "red" }}
           onPress={() =>
+            navigation.navigate("Camera")
+          }
+        >
+          Camera
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: "80%",
+          padding: 5,
+          borderColor: "red",
+          borderWidth: 1,
+          borderRadius: 15,
+          marginVertical: 10
+        }}
+      >
+        <Text
+          style={{ textAlign: "center", color: "red" }}
+          onPress={() =>
             navigation.navigate("MediaLibrary")
           }
         >
-          Media Library / Camera
+          Media Library
         </Text>
       </TouchableOpacity>
     </View>
