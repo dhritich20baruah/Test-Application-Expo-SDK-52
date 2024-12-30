@@ -1,20 +1,14 @@
 import { useState, useRef, useEffect } from "react";
+import { CameraView, Camera } from "expo-camera";
 import {
-  CameraView,
-  CameraType,
-  useCameraPermissions,
-  Camera,
-} from "expo-camera";
-import {
-  Button,
   StyleSheet,
   SafeAreaView,
   Image,
-  TextInput,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { useVideoPlayer, VideoView } from "expo-video";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as MediaLibrary from "expo-media-library";
 // import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
@@ -23,7 +17,7 @@ import * as MediaLibrary from "expo-media-library";
 //   try {
 //     await db.execAsync(`
 //         PRAGMA journal_mode = WAL;
-//         CREATE TABLE IF NOT EXISTS gallery (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, uri TEXT, notes TEXT);   
+//         CREATE TABLE IF NOT EXISTS gallery (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, uri TEXT, notes TEXT);
 //         `);
 //     console.log("DB connected");
 //   } catch (error) {
@@ -43,11 +37,12 @@ export default function CameraFunction() {
   // const db = useSQLiteContext();
   const [facing, setFacing] = useState("back");
   const [cameraMode, setCameraMode] = useState("picture");
-  const [permission, requestPermission] = useCameraPermissions(); //Camera Permission State
-  const [hasMediaLibPermit, setHasMediaLibPermit] = useState(); //Media Permission State
-  const [permissionResponse, requestPermissionRe] = MediaLibrary.usePermissions();
+  const [hasCameraPermission, setHasCameraPermission] = useState();
+  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
+  const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
   let cameraRef = useRef();
   const [photo, setPhoto] = useState();
+  const [video, setVideo] = useState();
   const [flashMode, setFlashMode] = useState("on");
   const [recording, setRecording] = useState(false);
 
@@ -56,25 +51,24 @@ export default function CameraFunction() {
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
       const mediaLibraryPermission =
         await MediaLibrary.requestPermissionsAsync();
+      const microphonePermission =
+        await Camera.requestMicrophonePermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
-      setHasMediaLibPermit(permissionResponse.status === "granted");
+      setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+      setHasMicrophonePermission(microphonePermission.status === "granted");
     })();
   }, []);
 
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
+  if (
+    hasCameraPermission === undefined ||
+    hasMicrophonePermission === undefined
+  ) {
+    return <Text>Requesting permissions...</Text>;
+  } else if (!hasCameraPermission) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.message}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
+      <Text>
+        Permission for camera not granted. Please change this in settings.
+      </Text>
     );
   }
 
@@ -95,45 +89,19 @@ export default function CameraFunction() {
 
     let newPhoto = await cameraRef.current.takePictureAsync(options);
     setPhoto(newPhoto);
-    console.log("URI", photo.uri);
   };
 
-  async function recordVideo() {
-    if (cameraRef) {
-      try {
-        setRecording(true);
-        const video = await cameraRef.current.recordAsync({
-          maxDuration: 10
-        })
-        console.log(video.uri); // Video file location
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
-
-  function stopRecording() {
-    if (cameraRef) {
-      setRecording(false);
-      cameraRef.stopRecording();
-    }
-  }
-
   if (photo) {
-    let savePhoto = async () => {
-      const asset = await MediaLibrary.createAssetAsync(photo.uri);
-      let dateString = new Date().toISOString();
-      let date = dateString
-        .slice(0, dateString.indexOf("T"))
-        .split("-")
-        .reverse()
-        .join("-");
+    let savePhoto = () => {
+      MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
+        setPhoto(undefined);
+      });
     };
     return (
       <SafeAreaView style={styles.imageContainer}>
         <Image style={styles.preview} source={{ uri: photo.uri }} />
         <View style={styles.btnContainer}>
-          {!hasMediaLibPermit ? (
+          {hasMediaLibraryPermission ? (
             <TouchableOpacity onPress={savePhoto} style={styles.btn}>
               <Ionicons name="save-outline" size={30} color="black" />
             </TouchableOpacity>
@@ -149,6 +117,57 @@ export default function CameraFunction() {
     );
   }
 
+  async function recordVideo() {
+    setRecording(true);
+    cameraRef.current
+      .recordAsync({
+        maxDuration: 30,
+      })
+      .then((newVideo) => {
+        setVideo(newVideo);
+        setRecording(false);
+      });
+    console.log(video.uri); // Video file location
+  }
+
+  function stopRecording() {
+    setRecording(false);
+    cameraRef.current.stopRecording();
+    MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
+      setVideo(undefined);
+    });
+  }
+
+  // if (video) {
+  //   let saveVideo = () => {
+  //     MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
+  //       setVideo(undefined);
+  //     });
+  //   };
+
+  //   return (
+  //     <SafeAreaView style={styles.imageContainer}>
+  //       <VideoView
+  //         style={styles.video}
+  //         source={{ uri: video.uri }}
+  //         allowsFullscreen allowsPictureInPicture player={player}
+  //       />
+  //       <View style={styles.btnContainer}>
+  //         {hasMediaLibraryPermission ? (
+  //           <TouchableOpacity onPress={saveVideo} style={styles.btn}>
+  //             <Ionicons name="save-outline" size={30} color="black" />
+  //           </TouchableOpacity>
+  //         ) : undefined}
+  //         <TouchableOpacity
+  //           onPress={() => setPhoto(undefined)}
+  //           style={styles.btn}
+  //         >
+  //           <Ionicons name="trash-outline" size={30} color="black" />
+  //         </TouchableOpacity>
+  //       </View>
+  //     </SafeAreaView>
+  //   );
+  // }
   return (
     <View style={styles.container}>
       <CameraView
@@ -272,5 +291,9 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     flex: 1,
     width: "auto",
+  },
+  video: {
+    flex: 1,
+    alignSelf: "stretch",
   },
 });

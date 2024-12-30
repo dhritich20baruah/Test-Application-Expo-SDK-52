@@ -20,7 +20,8 @@
     "react-native-screens": "~4.1.0",
     "expo-dev-client": "~5.0.5",
     "expo-camera": "~16.0.9",
-    "expo-media-library": "~17.0.3"
+    "expo-media-library": "~17.0.3",
+    "expo-video": "~2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
