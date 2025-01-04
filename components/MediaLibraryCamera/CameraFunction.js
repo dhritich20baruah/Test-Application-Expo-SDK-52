@@ -7,35 +7,13 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button
 } from "react-native";
-import { useVideoPlayer, VideoView } from "expo-video";
-import { useEvent } from "expo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as MediaLibrary from "expo-media-library";
-// import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
-
-// const initializeDB = async (db) => {
-//   try {
-//     await db.execAsync(`
-//         PRAGMA journal_mode = WAL;
-//         CREATE TABLE IF NOT EXISTS gallery (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, uri TEXT, notes TEXT);
-//         `);
-//     console.log("DB connected");
-//   } catch (error) {
-//     console.log("Error in connecting DB", error);
-//   }
-// };
-
-// export default function CameraApp() {
-//   return (
-//     <SQLiteProvider databaseName="SDK52Test.db" onInit={initializeDB}>
-//       <CameraFunction />
-//     </SQLiteProvider>
-//   );
-// }
+import {useNavigation} from "@react-navigation/native";
 
 export default function CameraFunction() {
-  // const db = useSQLiteContext();
   const [facing, setFacing] = useState("back");
   const [cameraMode, setCameraMode] = useState("picture");
   const [hasCameraPermission, setHasCameraPermission] = useState();
@@ -46,6 +24,7 @@ export default function CameraFunction() {
   const [video, setVideo] = useState();
   const [flashMode, setFlashMode] = useState("on");
   const [recording, setRecording] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -101,18 +80,6 @@ export default function CameraFunction() {
     return (
       <SafeAreaView style={styles.imageContainer}>
         <Image style={styles.preview} source={{ uri: photo.uri }} />
-        <View style={styles.controlsContainer}>
-        <Button
-          title={isPlaying ? 'Pause' : 'Play'}
-          onPress={() => {
-            if (isPlaying) {
-              player.pause();
-            } else {
-              player.play();
-            }
-          }}
-        />
-      </View>
         <View style={styles.btnContainer}>
           {hasMediaLibraryPermission ? (
             <TouchableOpacity onPress={savePhoto} style={styles.btn}>
@@ -146,48 +113,37 @@ export default function CameraFunction() {
   function stopRecording() {
     setRecording(false);
     cameraRef.current.stopRecording();
-    console.log("Video Recording stopped");
+    console.log("recording stopped")
   }
 
   if (video) {
-    console.log(video.uri);
-    let saveVideo = () => {
-      MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
-        setVideo(undefined);
-      });
-    };
-
-    const player = useVideoPlayer(video.uri, (player) => {
-      player.loop = true;
-      player.play();
-    });
-
-    const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
-
-    return (
-      <View style={styles.videoContainer}>
-        <VideoView
-          style={styles.video}
-          player={player}
-          allowsFullscreen
-          allowsPictureInPicture
-        />
-        <View style={styles.btnContainer}>
-          {hasMediaLibraryPermission ? (
-            <TouchableOpacity onPress={saveVideo} style={styles.btn}>
-              <Ionicons name="save-outline" size={30} color="black" />
-            </TouchableOpacity>
-          ) : undefined}
-          <TouchableOpacity
-            onPress={() => setPhoto(undefined)}
-            style={styles.btn}
-          >
-            <Ionicons name="trash-outline" size={30} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+    let uri = video.uri;
+    navigation.navigate("VideoScreen", { uri });
   }
+
+  let saveVideo = () => {
+    MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
+      setVideo(undefined);
+    });
+  };
+  // return (
+  //   <View style={styles.videoContainer}>
+  //     <Text style={{flex: 1, justifyContent: "center", alignItems: "center", fontSize: 30}}>Do you want to save recording?</Text>
+  //     <View style={styles.btnContainer}>
+  //       {hasMediaLibraryPermission ? (
+  //         <TouchableOpacity onPress={saveVideo} style={styles.btn}>
+  //           <Ionicons name="save-outline" size={30} color="black" />
+  //         </TouchableOpacity>
+  //       ) : undefined}
+  //       <TouchableOpacity
+  //         onPress={() => setVideo(undefined)}
+  //         style={styles.btn}
+  //       >
+  //         <Ionicons name="trash-outline" size={30} color="black" />
+  //       </TouchableOpacity>
+  //     </View>
+  //   </View>
+  // );
   return (
     <View style={styles.container}>
       <CameraView
@@ -315,8 +271,8 @@ const styles = StyleSheet.create({
   videoContainer: {
     flex: 1,
     padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 50,
   },
   video: {
