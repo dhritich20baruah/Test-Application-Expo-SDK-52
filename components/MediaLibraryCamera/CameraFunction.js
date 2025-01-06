@@ -14,18 +14,19 @@ import * as MediaLibrary from "expo-media-library";
 import {useNavigation} from "@react-navigation/native";
 
 export default function CameraFunction() {
-  const [facing, setFacing] = useState("back");
-  const [cameraMode, setCameraMode] = useState("picture");
-  const [hasCameraPermission, setHasCameraPermission] = useState();
-  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
-  const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
+  const [hasCameraPermission, setHasCameraPermission] = useState(); //State variable for camera permission
+  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState(); //State variable for media library permission
+  const [hasMicrophonePermission, setHasMicrophonePermission] = useState(); // state variable for microphone permission
+  const [cameraMode, setCameraMode] = useState("picture"); //State variable for picture or video. By default it will be for picture
+  const [facing, setFacing] = useState("back"); //State for front or back camera. By default back camera
   let cameraRef = useRef();
-  const [photo, setPhoto] = useState();
-  const [video, setVideo] = useState();
-  const [flashMode, setFlashMode] = useState("on");
-  const [recording, setRecording] = useState(false);
+  const [photo, setPhoto] = useState(); //After picture is taken this state will be updated with the picture
+  const [video, setVideo] = useState(); //After video is recorded this state will be updated
+  const [flashMode, setFlashMode] = useState("on"); //Camera flash 
+  const [recording, setRecording] = useState(false); //State will be true when the camera will be recording
   const navigation = useNavigation();
 
+  //When the screen is rendered initially the use effect hook will run and check if permission is granted to the app to access the Camera, Microphone and Media Library.
   useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
@@ -39,6 +40,7 @@ export default function CameraFunction() {
     })();
   }, []);
 
+  //If permissions are not granted app will have to wait for permission
   if (
     hasCameraPermission === undefined ||
     hasMicrophonePermission === undefined
@@ -52,23 +54,26 @@ export default function CameraFunction() {
     );
   }
 
+  //Function to toggle flash on or off
   const toggleFlash = () => {
     setFlashMode((current) => (current === "on" ? "off" : "on"));
   };
 
+  //Function to toggle between back and front camera
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
-  let takePic = async () => {
+  let takePic = async () => { //Declares takePic as an asynchronous function using the async keyword. 
     let options = {
-      quality: 1,
-      base64: true,
-      exif: false,
+      quality: 1, //Specifies the quality of the captured image. A value of 1 indicates maximum quality, whereas lower values reduce quality (and file size).
+      base64: true, //Includes the image's Base64 representation in the returned object. This is useful for embedding the image directly in data URIs or for immediate upload to servers.
+      exif: false, //Disables the inclusion of EXIF metadata in the image (e.g., location, device info). Setting this to true would include such metadata.
     };
 
-    let newPhoto = await cameraRef.current.takePictureAsync(options);
-    setPhoto(newPhoto);
+    let newPhoto = await cameraRef.current.takePictureAsync(options); //Refers to the camera instance (set using a ref in React). This is used to call methods on the camera.
+    //Captures an image with the specified options and returns a promise that resolves to an object containing: URI and Base64 string and/or EXIF data, based on the provided options.
+    setPhoto(newPhoto); //Update photo state with the new photo object
   };
 
   if (photo) {
