@@ -7,11 +7,11 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button
+  Button,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as MediaLibrary from "expo-media-library";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CameraFunction() {
   const [hasCameraPermission, setHasCameraPermission] = useState(); //State variable for camera permission
@@ -22,9 +22,10 @@ export default function CameraFunction() {
   let cameraRef = useRef();
   const [photo, setPhoto] = useState(); //After picture is taken this state will be updated with the picture
   const [video, setVideo] = useState(); //After video is recorded this state will be updated
-  const [flashMode, setFlashMode] = useState("on"); //Camera flash 
+  const [flashMode, setFlashMode] = useState("on"); //Camera flash
   const [recording, setRecording] = useState(false); //State will be true when the camera will be recording
   const navigation = useNavigation();
+  const [zoom, setZoom] = useState(0);
 
   //When the screen is rendered initially the use effect hook will run and check if permission is granted to the app to access the Camera, Microphone and Media Library.
   useEffect(() => {
@@ -64,7 +65,17 @@ export default function CameraFunction() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
-  let takePic = async () => { //Declares takePic as an asynchronous function using the async keyword. 
+  //Zoom Function
+  const increaseZoom = () => {
+    setZoom((prev) => Math.min(prev + 0.1, 1));
+  };
+
+  const decreaseZoom = () => {
+    setZoom((prev) => Math.max(prev - 0.1, 0));
+  };
+
+  let takePic = async () => {
+    //Declares takePic as an asynchronous function using the async keyword.
     let options = {
       quality: 1, //Specifies the quality of the captured image. A value of 1 indicates maximum quality, whereas lower values reduce quality (and file size).
       base64: true, //Includes the image's Base64 representation in the returned object. This is useful for embedding the image directly in data URIs or for immediate upload to servers.
@@ -118,7 +129,7 @@ export default function CameraFunction() {
   function stopRecording() {
     setRecording(false);
     cameraRef.current.stopRecording();
-    console.log("recording stopped")
+    console.log("recording stopped");
   }
 
   if (video) {
@@ -126,29 +137,6 @@ export default function CameraFunction() {
     navigation.navigate("VideoScreen", { uri });
   }
 
-  let saveVideo = () => {
-    MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
-      setVideo(undefined);
-    });
-  };
-  // return (
-  //   <View style={styles.videoContainer}>
-  //     <Text style={{flex: 1, justifyContent: "center", alignItems: "center", fontSize: 30}}>Do you want to save recording?</Text>
-  //     <View style={styles.btnContainer}>
-  //       {hasMediaLibraryPermission ? (
-  //         <TouchableOpacity onPress={saveVideo} style={styles.btn}>
-  //           <Ionicons name="save-outline" size={30} color="black" />
-  //         </TouchableOpacity>
-  //       ) : undefined}
-  //       <TouchableOpacity
-  //         onPress={() => setVideo(undefined)}
-  //         style={styles.btn}
-  //       >
-  //         <Ionicons name="trash-outline" size={30} color="black" />
-  //       </TouchableOpacity>
-  //     </View>
-  //   </View>
-  // );
   return (
     <View style={styles.container}>
       <CameraView
@@ -157,7 +145,13 @@ export default function CameraFunction() {
         ref={cameraRef}
         flash={flashMode}
         mode={cameraMode}
+        zoom={zoom}
       >
+        <View>
+          <TouchableOpacity style={styles.button} onPress={increaseZoom}>
+            <Ionicons name="search-outline" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <Ionicons name="camera-reverse-outline" size={20} color="white" />
