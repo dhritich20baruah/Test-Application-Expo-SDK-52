@@ -12,6 +12,7 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as MediaLibrary from "expo-media-library";
 import { useNavigation } from "@react-navigation/native";
+import Slider from "@react-native-community/slider";
 
 export default function CameraFunction() {
   const [hasCameraPermission, setHasCameraPermission] = useState(); //State variable for camera permission
@@ -147,11 +148,16 @@ export default function CameraFunction() {
         mode={cameraMode}
         zoom={zoom}
       >
-        <View>
-          <TouchableOpacity style={styles.button} onPress={increaseZoom}>
-            <Ionicons name="search-outline" size={20} color="white" />
-          </TouchableOpacity>
-        </View>
+        <Slider
+          style={{ width: "100%", height: 40, position: "absolute", top: "75%" }}
+          minimumValue={0}
+          maximumValue={1}
+          minimumTrackTintColor="cyan"
+          maximumTrackTintColor="white"
+          value={zoom}
+          onValueChange={(value)=>setZoom(value)}
+          vertical={true}
+        />
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <Ionicons name="camera-reverse-outline" size={20} color="white" />
