@@ -20,7 +20,7 @@ export default function CameraFunction() {
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState(); // state variable for microphone permission
   const [cameraMode, setCameraMode] = useState("picture"); //State variable for picture or video. By default it will be for picture
   const [facing, setFacing] = useState("back"); //State for front or back camera. By default back camera
-  let cameraRef = useRef();
+  let cameraRef = useRef(); //Creates a ref object and assigns it to the variable cameraRef.
   const [photo, setPhoto] = useState(); //After picture is taken this state will be updated with the picture
   const [video, setVideo] = useState(); //After video is recorded this state will be updated
   const [flashMode, setFlashMode] = useState("on"); //Camera flash
@@ -65,15 +65,6 @@ export default function CameraFunction() {
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
-
-  //Zoom Function
-  const increaseZoom = () => {
-    setZoom((prev) => Math.min(prev + 0.1, 1));
-  };
-
-  const decreaseZoom = () => {
-    setZoom((prev) => Math.max(prev - 0.1, 0));
-  };
 
   let takePic = async () => {
     //Declares takePic as an asynchronous function using the async keyword.
