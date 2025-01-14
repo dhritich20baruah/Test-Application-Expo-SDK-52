@@ -8,6 +8,7 @@ import ViewNote from "./components/Notes/ViewNote";
 import Media from "./components/MediaLibraryCamera/MediaLibrary";
 import CameraFunction from "./components/MediaLibraryCamera/CameraFunction";
 import VideoScreen from "./components/MediaLibraryCamera/VideoViewer";
+import Crud from "./components/Backend/Crud";
 // import "expo-dev-client"
 
 function HomeScreen({ navigation }) {
@@ -90,6 +91,25 @@ function HomeScreen({ navigation }) {
           Video Screen
         </Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: "80%",
+          padding: 5,
+          borderColor: "red",
+          borderWidth: 1,
+          borderRadius: 15,
+          marginVertical: 10
+        }}
+      >
+        <Text
+          style={{ textAlign: "center", color: "red" }}
+          onPress={() =>
+            navigation.navigate("Crud")
+          }
+        >
+          CRUD Backend
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -107,6 +127,7 @@ function App() {
         <Stack.Screen name="MediaLibrary" component={Media}/>
         <Stack.Screen name="Camera" component={CameraFunction}/>
         <Stack.Screen name="VideoScreen" component={VideoScreen}/>
+        <Stack.Screen name="Crud" component={Crud}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
