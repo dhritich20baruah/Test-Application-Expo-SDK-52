@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, FlatList, StyleSheet } from "react-native";
-
-const API_URL = "http://localhost:4000/notes"; // Use the correct IP for testing on a real device.
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+const API_URL = "http://192.168.43.43:4000"; // Use the correct IP for testing on a real device.
 
 export default function Crud() {
   const [items, setItems] = useState([]);
-  const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
+  const [note, setNote] = useState("");
+  const navigation = useNavigation();
 
   // Fetch items
   const fetchItems = async () => {
     try {
-      const response = await fetch(API_URL);
+      const response = await fetch(`${API_URL}/notes`);
       const data = await response.json();
+      console.log("data", data);
       setItems(data);
     } catch (error) {
       console.error("Error fetching items:", error);
@@ -20,15 +31,29 @@ export default function Crud() {
 
   // Add item
   const addItem = async () => {
+    let noteObj = {
+      title: title,
+      note: note,
+    };
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/addNote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: text }),
+        body: JSON.stringify(noteObj),
       });
-      const newItem = await response.json();
-      setItems((prev) => [...prev, newItem]);
-      setText("");
+
+      if (!response.ok) {
+        // Log or handle the error response
+        console.error(`Error: ${response.status} ${response.statusText}`);
+        return;
+      }
+
+    //   const newItem = await response.json();
+      let prevNotes = [...items]; 
+      prevNotes.push({ title: title, note: note }); 
+      setItems(prevNotes); 
+      setTitle("");
+      setNote("");
     } catch (error) {
       console.error("Error adding item:", error);
     }
@@ -36,9 +61,10 @@ export default function Crud() {
 
   // Delete item
   const deleteItem = async (id) => {
+    console.log(id)
     try {
-      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      setItems((prev) => prev.filter((item) => item.id !== id));
+      await fetch(`${API_URL}/deleteNote/${id}`, { method: "DELETE" });
+      await fetchItems()
     } catch (error) {
       console.error("Error deleting item:", error);
     }
@@ -52,21 +78,57 @@ export default function Crud() {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        value={text}
-        onChangeText={setText}
-        placeholder="Add item"
+        value={title}
+        onChangeText={setTitle}
+        placeholder="Title"
+      />
+      <TextInput
+        style={styles.input}
+        value={note}
+        onChangeText={setNote}
+        placeholder="Note"
       />
       <Button title="Add" onPress={addItem} />
-      <FlatList
-        data={items}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text>{item.name}</Text>
-            <Button title="Delete" onPress={() => deleteItem(item.id)} />
+      {items.map((item, index) => {
+        return (
+          <View key={index} style={styles.item}>
+            <Text style={{ fontSize: 15 }}>{item.title}</Text>
+            <Text style={{ fontSize: 15 }}>{item.note}</Text>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <TouchableOpacity
+                style={{ backgroundColor: "red", width: "50%" }}
+              >
+                <Text
+                  onPress={() => deleteItem(item._id)}
+                  style={{
+                    color: "white",
+                    fontWeight: "600",
+                    textAlign: "center",
+                    fontSize: 15,
+                  }}
+                >
+                  Delete{" "}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ backgroundColor: "blue", width: "50%" }}
+              >
+                <Text
+                  onPress={() => deleteItem(item.id)}
+                  style={{
+                    color: "white",
+                    fontWeight: "600",
+                    textAlign: "center",
+                    fontSize: 15,
+                  }}
+                >
+                  Edit{" "}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        )}
-      />
+        );
+      })}
     </View>
   );
 }
@@ -74,5 +136,9 @@ export default function Crud() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
   input: { borderWidth: 1, marginBottom: 10, padding: 10 },
-  item: { flexDirection: "row", justifyContent: "space-between", marginVertical: 5 },
+  item: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    marginVertical: 5,
+  },
 });
