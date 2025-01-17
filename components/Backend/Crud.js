@@ -15,6 +15,7 @@ export default function Crud() {
   const [items, setItems] = useState([]);
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
+  const [visible, setVisible] = useState(true);
   const navigation = useNavigation();
 
   // Fetch items
@@ -69,6 +70,45 @@ export default function Crud() {
       console.error("Error deleting item:", error);
     }
   };
+
+  const editNote = async (id) => {
+    setNoteId(id);
+    setVisible(true);
+    try {
+      const response = await fetch(`${API_URL}/notes`);
+      const data = await response.json();
+      console.log("data", data);
+      setItems(data);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    }
+  }
+
+  const updateNote = () => {
+    let text = note //There was a mistake in naming the state variables and table columns try to give different names.
+    db.transaction((tx) => {
+      tx.executeSql(
+        "UPDATE my_notes set note = ? WHERE id = ?",
+        [text, noteId], // This line will update the note in the table
+        (txObj, resultSet) => {
+          if (resultSet.rowsAffected > 0) {
+            setNoteArr((prevNotes) => {
+              return prevNotes.map((note) => { //This will map over the value of the notes in the noteArr array
+                if (note.id === noteId){ //if id is same as the updated note id the note will be edited.
+                  return {...note, note: text}
+                }
+                return note
+              })
+            })
+            setNote("");
+            setVisible(false);
+          }
+        },
+        (txObj, error) => console.log(error)
+      );
+    });
+  }
+
 
   useEffect(() => {
     fetchItems();
