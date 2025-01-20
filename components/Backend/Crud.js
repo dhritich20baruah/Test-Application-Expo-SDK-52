@@ -103,10 +103,7 @@ export default function Crud() {
         return;
       }
 
-    //   const newItem = await response.json();
-      let prevNotes = [...items]; 
-      prevNotes.push({ title: title, note: note }); 
-      setItems(prevNotes); 
+      await fetchItems()
       setTitle("");
       setNote("");
     } catch (error) {
