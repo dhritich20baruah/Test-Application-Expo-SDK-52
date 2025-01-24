@@ -9,7 +9,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-const API_URL = "http://192.168.43.44:4000"; // Use the correct IP for testing on a real device.
+
+// const API_URL = "http://192.168.43.44:4000"; // Use the correct IP for testing on a real device.
+const API_URL = "https://react-native-express-mongo-db.vercel.app"
 
 export default function Crud() {
   const [items, setItems] = useState([]);
