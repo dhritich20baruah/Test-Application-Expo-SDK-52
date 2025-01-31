@@ -106,14 +106,14 @@ export default function CameraFunction() {
   }
 
   async function recordVideo() {
-    setRecording(true);
-    cameraRef.current
-      .recordAsync({
-        maxDuration: 30,
+    setRecording(true); //Updates the recording state to true. This will also toggle record button to stop button.
+    cameraRef.current //cameraRef is a useRef hook pointing to the camera component. It provides access to the camera's methods, such as recordAsync.
+      .recordAsync({ //Starts recording a video and returns a Promise that resolves with the recorded video’s details.
+        maxDuration: 30, //Limits the recording duration to 30 seconds. After 30 seconds, the recording automatically stops, and the Promise resolves.
       })
-      .then((newVideo) => {
-        setVideo(newVideo);
-        setRecording(false);
+      .then((newVideo) => { //The result of this Promise is an object (newVideo) containing information about the recorded video, such as the file's URI and other metadata. This callback runs when the recording completes successfully. 
+        setVideo(newVideo); // Stores the recorded video details in the state, which can later be used for playback, uploading, or other actions.
+        setRecording(false); // Stores the recorded video details in the state, which can later be used for playback, uploading, or other actions.
       });
     console.log(video.uri); // Video file location
   }
