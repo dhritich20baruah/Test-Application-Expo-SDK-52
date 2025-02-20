@@ -28,7 +28,8 @@
     "plugins": [
       "expo-sqlite",
       "expo-video",
-      "expo-asset"
+      "expo-asset",
+      "expo-barcode-scanner"
     ],
     "extra": {
       "eas": {

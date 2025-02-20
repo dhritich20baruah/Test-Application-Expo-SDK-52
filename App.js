@@ -10,6 +10,8 @@ import CameraFunction from "./components/MediaLibraryCamera/CameraFunction";
 import VideoScreen from "./components/MediaLibraryCamera/VideoViewer";
 import Crud from "./components/Backend/Crud";
 import ImageManipulation from "./components/MediaLibraryCamera/ImageManipulator";
+import QRCodeScanner from "./components/QRCode/QRCodeScanner";
+import ScanResult from "./components/QRCode/ScanResult";
 // import "expo-dev-client"
 
 function HomeScreen({ navigation }) {
@@ -130,6 +132,25 @@ function HomeScreen({ navigation }) {
           Image Manipulator
         </Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: "80%",
+          padding: 5,
+          borderColor: "red",
+          borderWidth: 1,
+          borderRadius: 15,
+          marginVertical: 10
+        }}
+      >
+        <Text
+          style={{ textAlign: "center", color: "red" }}
+          onPress={() =>
+            navigation.navigate("QRCodeScanner")
+          }
+        >
+          QR Code Scanner
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -149,6 +170,8 @@ function App() {
         <Stack.Screen name="VideoScreen" component={VideoScreen}/>
         <Stack.Screen name="Crud" component={Crud}/>
         <Stack.Screen name="ImageManipulation" component={ImageManipulation}/>
+        <Stack.Screen name="QRCodeScanner" component={QRCodeScanner}/>
+        <Stack.Screen name="ScanResult" component={ScanResult}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
