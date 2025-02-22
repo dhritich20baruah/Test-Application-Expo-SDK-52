@@ -12,6 +12,7 @@ import Crud from "./components/Backend/Crud";
 import ImageManipulation from "./components/MediaLibraryCamera/ImageManipulator";
 import QRCodeScanner from "./components/QRCode/QRCodeScanner";
 import ScanResult from "./components/QRCode/ScanResult";
+import History from "./components/QRCode/History";
 // import "expo-dev-client"
 
 function HomeScreen({ navigation }) {
@@ -172,6 +173,7 @@ function App() {
         <Stack.Screen name="ImageManipulation" component={ImageManipulation}/>
         <Stack.Screen name="QRCodeScanner" component={QRCodeScanner}/>
         <Stack.Screen name="ScanResult" component={ScanResult}/>
+        <Stack.Screen name="History" component={History}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
