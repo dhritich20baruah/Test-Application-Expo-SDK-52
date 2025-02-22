@@ -50,15 +50,22 @@ export function Scanner() {
 
   const handleScanResult = async ({ data }) => {
     setScanned(true);
-    let dateString = new Date().toISOString();
+    let dateObj = new Date()
+    let dateString = dateObj.toISOString();
     let date = dateString
       .slice(0, dateString.indexOf("T"))
       .split("-")
       .reverse()
       .join("-");
 
+    // Extract and format the time (hh:mm)
+    let time = dateObj.toTimeString().slice(0, 5); // Extracts HH:MM
+
+    // Combine date and time
+    let dateTime = `${date} ${time}`;
+
     await db.runAsync("INSERT INTO qrHistory (date, qrData) values (?, ?)", [
-      date,
+      dateTime,
       data,
     ]);
     await navigation.navigate("ScanResult", { qrData: data });

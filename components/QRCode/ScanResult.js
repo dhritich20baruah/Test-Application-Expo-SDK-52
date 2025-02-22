@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Linking from "expo-linking";
-import * as Sharing from "expo-sharing";
 import * as Clipboard from "expo-clipboard";
 
 export default function ScanResult({ route, navigation }) {
