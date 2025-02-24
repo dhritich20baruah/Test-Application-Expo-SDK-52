@@ -29,7 +29,8 @@
       "expo-sqlite",
       "expo-video",
       "expo-asset",
-      "expo-barcode-scanner"
+      "expo-barcode-scanner",
+      "react-native-vision-camera"
     ],
     "extra": {
       "eas": {

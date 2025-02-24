@@ -13,10 +13,26 @@ import ImageManipulation from "./components/MediaLibraryCamera/ImageManipulator"
 import QRCodeScanner from "./components/QRCode/QRCodeScanner";
 import ScanResult from "./components/QRCode/ScanResult";
 import History from "./components/QRCode/History";
+import ScanImage from "./components/QRCode/ScanImage";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 // import "expo-dev-client"
 
-function HomeScreen({ navigation }) {
-  
+const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+//Drawer Navigator for QR Code Screens
+function QRCodeDrawer(){
+  return(
+    <Drawer.Navigator initialRouteName="QRCodeScanner">
+      <Drawer.Screen name="Scan Code" component={QRCodeScanner}/>
+      <Drawer.Screen name="Scan Image" component={ScanImage}/>
+      {/* <Drawer.Screen name="ScanResult" component={ScanResult}/> */}
+      <Drawer.Screen name="History" component={History}/>
+    </Drawer.Navigator>
+  )
+}
+
+function HomeScreen({ navigation }) {  
    return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <TouchableOpacity
@@ -146,7 +162,7 @@ function HomeScreen({ navigation }) {
         <Text
           style={{ textAlign: "center", color: "red" }}
           onPress={() =>
-            navigation.navigate("QRCodeScanner")
+            navigation.navigate("QRCodeScreens")
           }
         >
           QR Code Scanner
@@ -155,8 +171,6 @@ function HomeScreen({ navigation }) {
     </View>
   );
 }
-
-const Stack = createNativeStackNavigator();
 
 function App() {
   return (
@@ -171,9 +185,8 @@ function App() {
         <Stack.Screen name="VideoScreen" component={VideoScreen}/>
         <Stack.Screen name="Crud" component={Crud}/>
         <Stack.Screen name="ImageManipulation" component={ImageManipulation}/>
-        <Stack.Screen name="QRCodeScanner" component={QRCodeScanner}/>
         <Stack.Screen name="ScanResult" component={ScanResult}/>
-        <Stack.Screen name="History" component={History}/>
+        <Stack.Screen name="QRCodeScreens" component={QRCodeDrawer} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

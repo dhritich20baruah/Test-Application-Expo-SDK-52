@@ -6,7 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
-  Share
+  Share,
 } from "react-native";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -28,7 +28,9 @@ export function QRList() {
   const isFocused = useIsFocused();
 
   async function fetchHistory() {
-    const result = await db.getAllAsync("SELECT * FROM qrHistory ORDER BY id DESC");
+    const result = await db.getAllAsync(
+      "SELECT * FROM qrHistory ORDER BY id DESC"
+    );
     setHistory(result);
   }
 
@@ -62,6 +64,16 @@ export function QRList() {
     alert("Copied to Clipboard!");
   };
 
+  async function deleteQR(id) {
+    let deletion = await db.runAsync("DELETE FROM qrHistory WHERE id = ?", [
+      id,
+    ]);
+    fetchHistory()
+    // let prevQR = [...history].filter((qr) => qr.id != id);
+    // setHistory(prevQR);
+    Alert.alert("Link deleted");
+  }
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -71,22 +83,36 @@ export function QRList() {
               <Text style={styles.txtDt}>{item.date}</Text>
               <Text style={styles.txtData}>{item.qrData}</Text>
               <View style={styles.btnContainer}>
-                <TouchableOpacity style={styles.touchable} onPress={()=>openLink(item.qrData)}>
+                <TouchableOpacity
+                  style={styles.touchable}
+                  onPress={() => openLink(item.qrData)}
+                >
                   <Text style={styles.icons}>
                     <Ionicons name="open" size={25} color="white" />
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.touchable} onPress={()=>shareLink(item.qrData)}>
+                <TouchableOpacity
+                  style={styles.touchable}
+                  onPress={() => shareLink(item.qrData)}
+                >
                   <Text style={styles.icons}>
                     <Ionicons name="share-social" size={25} color="white" />
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.touchable}
-                  onPress={()=>copyToClipboard(item.qrData)}
+                  onPress={() => copyToClipboard(item.qrData)}
                 >
                   <Text style={styles.icons}>
                     <Ionicons name="copy" size={25} color="white" />
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.touchable}
+                  onPress={() => deleteQR(item.id)}
+                >
+                  <Text style={styles.icons}>
+                    <Ionicons name="trash" size={25} color="white" />
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -122,10 +148,10 @@ const styles = StyleSheet.create({
   btnContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 10
+    marginVertical: 10,
   },
   touchable: {
-    width: "30%",
+    width: "25%",
   },
   icons: {
     textAlign: "center",
