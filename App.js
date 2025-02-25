@@ -14,6 +14,7 @@ import QRCodeScanner from "./components/QRCode/QRCodeScanner";
 import ScanResult from "./components/QRCode/ScanResult";
 import History from "./components/QRCode/History";
 import ScanImage from "./components/QRCode/ScanImage";
+import QRCodeGenerator from "./components/QRCode/QRCodeGenerator";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 // import "expo-dev-client"
 
@@ -28,6 +29,7 @@ function QRCodeDrawer(){
       <Drawer.Screen name="Scan Image" component={ScanImage}/>
       {/* <Drawer.Screen name="ScanResult" component={ScanResult}/> */}
       <Drawer.Screen name="History" component={History}/>
+      <Drawer.Screen name="Create QR Code" component={QRCodeGenerator}/>
     </Drawer.Navigator>
   )
 }

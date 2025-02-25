@@ -2,7 +2,6 @@ import React from "react";
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -12,8 +11,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Linking from "expo-linking";
 import * as Clipboard from "expo-clipboard";
 
-export default function ScanResult({ route, navigation }) {
-  const { qrData } = route.params;
+export default function ScanResult({ route, qrData: propQrData }) {
+  const qrData = propQrData || (route && route.params && route.params.qrData); // Use prop or route param
 
   const openLink = () => {
     if (Linking.canOpenURL(qrData)) {
@@ -61,7 +60,6 @@ export default function ScanResult({ route, navigation }) {
           </Text>
         </TouchableOpacity>
       </View>
-      <Button title="History" onPress={()=>navigation.navigate("History")}/>
     </View>
   );
 }
