@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Button, Image } from "react-native";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import jsQR from "jsqr";
@@ -44,7 +44,6 @@ export function ImageScanner({ navigation }) {
       setImageUri(result.assets[0].uri);
       const text = await scanQRCode(result.assets[0].uri);
       setQrText(text || "No QR Code found.");
-      handleScanResult(qrCode.data);
     }
   };
 
@@ -64,7 +63,6 @@ export function ImageScanner({ navigation }) {
       const uint8ClampedArray = await new Uint8ClampedArray(
         rawImageData.data.buffer
       );
-      console.log(rawImageData.height, rawImageData.width);
 
       const qrCode = await jsQR(
         uint8ClampedArray,
@@ -73,6 +71,7 @@ export function ImageScanner({ navigation }) {
       );
       if (qrCode) {
         console.log("QR Code Found:", qrCode.data);
+        await handleScanResult(qrCode.data);
         return qrCode.data;
       } else {
         console.log("No QR Code found.");
@@ -83,8 +82,7 @@ export function ImageScanner({ navigation }) {
     }
   };
 
-  const handleScanResult = async ({ data }) => {
-    setScanned(true);
+  const handleScanResult = async (data) => {
     let dateObj = new Date();
     let dateString = dateObj.toISOString();
     let date = dateString
