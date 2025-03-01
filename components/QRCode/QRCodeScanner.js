@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { Camera, CameraView } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
-
+import Ionicons from "@expo/vector-icons/Ionicons";
 const initializeDB = async (db) => {
   try {
     await db.execAsync(`
@@ -27,6 +27,7 @@ export default function QRCodeScanner() {
 export function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [torch, setTorch] = useState(false); //Camera flash
   const navigation = useNavigation();
   const db = useSQLiteContext();
 
@@ -46,6 +47,10 @@ export function Scanner() {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
+
+  const toggleTorch = () => {
+    setTorch((current) => (current === false ? true : false));
+  };
 
   const handleScanResult = async ({ data }) => {
     setScanned(true);
@@ -78,10 +83,31 @@ export function Scanner() {
           barcodeTypes: ["qr", "pdf417"],
         }}
         style={StyleSheet.absoluteFillObject}
+        enableTorch = {torch}
       />
       {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}
+      <View style={{flex: 1, margin: 50}}>
+       <TouchableOpacity style={styles.button} onPress={toggleTorch}>
+            <Text>
+              {torch === false ? (
+                <Ionicons
+                  name="flashlight-outline"
+                  size={30}
+                  color="white"
+                />
+              ) : (
+                <Ionicons
+                name="flash-off-outline"
+                size={30}
+                color="white"
+                style={styles.btnText}
+                />
+              )}
+            </Text>
+          </TouchableOpacity>
+        </View>
     </View>
   );
 }
@@ -91,5 +117,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+  },
+  button: {
+    flex: 1,
+    alignSelf: "flex-end",
+    alignItems: "center",
   },
 });

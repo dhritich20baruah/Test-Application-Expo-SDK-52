@@ -22,20 +22,29 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 //Drawer Navigator for QR Code Screens
-function QRCodeDrawer(){
-  return(
-    <Drawer.Navigator initialRouteName="QRCodeScanner">
-      <Drawer.Screen name="Scan Code" component={QRCodeScanner}/>
-      <Drawer.Screen name="Scan Image" component={ScanImage}/>
+function QRCodeDrawer() {
+  return (
+    <Drawer.Navigator
+      initialRouteName="QRCodeScanner"
+      screenOptions={{
+        drawerStyle: { backgroundColor: "white", width: 240 },
+        drawerLabelStyle: { fontSize: 16 },
+        drawerActiveBackgroundColor: "black",
+        drawerActiveTintColor: "white",
+        headerShown: true,
+      }}
+    >
+      <Drawer.Screen name="Scan Code" component={QRCodeScanner} />
+      <Drawer.Screen name="Scan Image" component={ScanImage} />
       {/* <Drawer.Screen name="ScanResult" component={ScanResult}/> */}
-      <Drawer.Screen name="History" component={History}/>
-      <Drawer.Screen name="Create QR Code" component={QRCodeGenerator}/>
+      <Drawer.Screen name="History" component={History} />
+      <Drawer.Screen name="Create QR Code" component={QRCodeGenerator} />
     </Drawer.Navigator>
-  )
+  );
 }
 
-function HomeScreen({ navigation }) {  
-   return (
+function HomeScreen({ navigation }) {
+  return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <TouchableOpacity
         style={{
@@ -44,14 +53,12 @@ function HomeScreen({ navigation }) {
           borderColor: "red",
           borderWidth: 1,
           borderRadius: 15,
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         <Text
           style={{ textAlign: "center", color: "red" }}
-          onPress={() =>
-            navigation.navigate("NotesScreen")
-          }
+          onPress={() => navigation.navigate("NotesScreen")}
         >
           Notes
         </Text>
@@ -63,14 +70,12 @@ function HomeScreen({ navigation }) {
           borderColor: "red",
           borderWidth: 1,
           borderRadius: 15,
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         <Text
           style={{ textAlign: "center", color: "red" }}
-          onPress={() =>
-            navigation.navigate("Camera")
-          }
+          onPress={() => navigation.navigate("Camera")}
         >
           Camera
         </Text>
@@ -82,14 +87,12 @@ function HomeScreen({ navigation }) {
           borderColor: "red",
           borderWidth: 1,
           borderRadius: 15,
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         <Text
           style={{ textAlign: "center", color: "red" }}
-          onPress={() =>
-            navigation.navigate("MediaLibrary")
-          }
+          onPress={() => navigation.navigate("MediaLibrary")}
         >
           Media Library
         </Text>
@@ -101,14 +104,12 @@ function HomeScreen({ navigation }) {
           borderColor: "red",
           borderWidth: 1,
           borderRadius: 15,
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         <Text
           style={{ textAlign: "center", color: "red" }}
-          onPress={() =>
-            navigation.navigate("VideoScreen")
-          }
+          onPress={() => navigation.navigate("VideoScreen")}
         >
           Video Screen
         </Text>
@@ -120,14 +121,12 @@ function HomeScreen({ navigation }) {
           borderColor: "red",
           borderWidth: 1,
           borderRadius: 15,
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         <Text
           style={{ textAlign: "center", color: "red" }}
-          onPress={() =>
-            navigation.navigate("Crud")
-          }
+          onPress={() => navigation.navigate("Crud")}
         >
           CRUD Backend
         </Text>
@@ -139,14 +138,12 @@ function HomeScreen({ navigation }) {
           borderColor: "red",
           borderWidth: 1,
           borderRadius: 15,
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         <Text
           style={{ textAlign: "center", color: "red" }}
-          onPress={() =>
-            navigation.navigate("ImageManipulation")
-          }
+          onPress={() => navigation.navigate("ImageManipulation")}
         >
           Image Manipulator
         </Text>
@@ -158,14 +155,12 @@ function HomeScreen({ navigation }) {
           borderColor: "red",
           borderWidth: 1,
           borderRadius: 15,
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         <Text
           style={{ textAlign: "center", color: "red" }}
-          onPress={() =>
-            navigation.navigate("QRCodeScreens")
-          }
+          onPress={() => navigation.navigate("QRCodeScreens")}
         >
           QR Code Scanner
         </Text>
@@ -180,15 +175,19 @@ function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="NotesScreen" component={Notes} />
-        <Stack.Screen name="AddNote" component={AddNote}/>
-        <Stack.Screen name="ViewNote" component={ViewNote}/>
-        <Stack.Screen name="MediaLibrary" component={Media}/>
-        <Stack.Screen name="Camera" component={CameraFunction}/>
-        <Stack.Screen name="VideoScreen" component={VideoScreen}/>
-        <Stack.Screen name="Crud" component={Crud}/>
-        <Stack.Screen name="ImageManipulation" component={ImageManipulation}/>
-        <Stack.Screen name="ScanResult" component={ScanResult}/>
-        <Stack.Screen name="QRCodeScreens" component={QRCodeDrawer} options={{headerShown: false}}/>
+        <Stack.Screen name="AddNote" component={AddNote} />
+        <Stack.Screen name="ViewNote" component={ViewNote} />
+        <Stack.Screen name="MediaLibrary" component={Media} />
+        <Stack.Screen name="Camera" component={CameraFunction} />
+        <Stack.Screen name="VideoScreen" component={VideoScreen} />
+        <Stack.Screen name="Crud" component={Crud} />
+        <Stack.Screen name="ImageManipulation" component={ImageManipulation} />
+        <Stack.Screen name="ScanResult" component={ScanResult} />
+        <Stack.Screen
+          name="QRCodeScreens"
+          component={QRCodeDrawer}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
