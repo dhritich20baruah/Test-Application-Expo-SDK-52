@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, Button, Image } from "react-native";
+import { View, Button, Image, Text } from "react-native";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import jsQR from "jsqr";
 import * as ImagePicker from "expo-image-picker";
@@ -104,7 +104,20 @@ export function ImageScanner({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        marginVertical: 20,
+      }}
+    >
+      <Text style={{textAlign: "center", margin: 10}}>
+        Click on the button to pick a QR Code.{" "}
+        <Text style={{ color: "red" }}>
+          Only .jpg or .jpeg files can be scanned.
+        </Text>
+      </Text>
       <Button title="Select Image" onPress={pickImage} color="black" />
       {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
       {qrText && <ScanResult qrData={qrText} />}
