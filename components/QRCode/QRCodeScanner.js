@@ -4,6 +4,7 @@ import { Camera, CameraView } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import Ionicons from "@expo/vector-icons/Ionicons";
+
 const initializeDB = async (db) => {
   try {
     await db.execAsync(`

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -69,9 +69,7 @@ export function QRList() {
       id,
     ]);
     fetchHistory()
-    // let prevQR = [...history].filter((qr) => qr.id != id);
-    // setHistory(prevQR);
-    Alert.alert("Link deleted");
+    Alert.alert("Deleted!!");
   }
 
   return (

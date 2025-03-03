@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Alert, Button, Text, TextInput, View, Share } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import * as FileSystem from "expo-file-system";
 import ViewShot from "react-native-view-shot";
 import * as MediaLibrary from "expo-media-library";
 

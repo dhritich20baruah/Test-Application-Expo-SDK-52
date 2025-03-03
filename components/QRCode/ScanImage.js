@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { View, Button, Image, Text } from "react-native";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import jsQR from "jsqr";
@@ -28,14 +28,14 @@ export default function ScanImage() {
   );
 }
 
-export function ImageScanner({ navigation }) {
+export function ImageScanner() {
   const [imageUri, setImageUri] = useState(null);
   const [qrText, setQrText] = useState("");
   const db = useSQLiteContext();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images", "videos"],
+      mediaTypes: ["images"],
       allowsEditing: true,
       quality: 1,
     });
