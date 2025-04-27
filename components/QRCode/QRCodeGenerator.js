@@ -35,7 +35,8 @@ const QRCodeGenerator = () => {
 
       const uri = await viewShotRef.current.capture();
       // const filePath = `${FileSystem.cacheDirectory}QRCode.jpg`;
-console.log(uri, "and filepath")
+      console.log(uri, "and filepath");
+      
       await MediaLibrary.saveToLibraryAsync(uri).then(() => {
         Alert.alert("QR Code saved to Media Library");
       });
@@ -45,9 +46,9 @@ console.log(uri, "and filepath")
     }
   };
 
-  function createAnother(){
-    setQRValue(null)
-    setText("")
+  function createAnother() {
+    setQRValue(null);
+    setText("");
   }
 
   return (
@@ -66,17 +67,21 @@ console.log(uri, "and filepath")
           textAlign: "center",
         }}
       />
-      { qRValue ?
-        <Button title="Create Another" onPress={createAnother} color="black"/>
-        :
+      {qRValue ? (
+        <Button title="Create Another" onPress={createAnother} color="black" />
+      ) : (
         <Button title="Generate QR Code" onPress={generateQR} color="black" />
-      }
+      )}
       {qRValue && (
         <View style={{ margin: 20 }}>
           <ViewShot
             ref={viewShotRef}
             options={{ format: "jpg", quality: 1.0 }}
-            style={{ marginVertical: 20, padding: 30, backgroundColor: "white" }}
+            style={{
+              marginVertical: 20,
+              padding: 30,
+              backgroundColor: "white",
+            }}
           >
             <QRCode value={qRValue} size={200} />
           </ViewShot>

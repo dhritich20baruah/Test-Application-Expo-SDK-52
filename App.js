@@ -15,6 +15,7 @@ import ScanResult from "./components/QRCode/ScanResult";
 import History from "./components/QRCode/History";
 import ScanImage from "./components/QRCode/ScanImage";
 import QRCodeGenerator from "./components/QRCode/QRCodeGenerator";
+import Expo3D from "./components/ExpoThree/Expo3D";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 // import "expo-dev-client"
 
@@ -165,6 +166,23 @@ function HomeScreen({ navigation }) {
           QR Code Scanner
         </Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: "80%",
+          padding: 5,
+          borderColor: "red",
+          borderWidth: 1,
+          borderRadius: 15,
+          marginVertical: 10,
+        }}
+      >
+        <Text
+          style={{ textAlign: "center", color: "red" }}
+          onPress={() => navigation.navigate("ExpoGL")}
+        >
+          Expo GL
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -188,6 +206,7 @@ function App() {
           component={QRCodeDrawer}
           options={{ headerShown: false }}
         />
+         <Stack.Screen name="ExpoGL" component={Expo3D} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -120,7 +120,7 @@ export function ImageScanner() {
       </Text>
       <Button title="Select Image" onPress={pickImage} color="black" />
       {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
-      {qrText && <ScanResult qrData={qrText} />}
+      {qrText ? <ScanResult qrData={qrText} /> : <Text style={{textAlign: "center", margin: 10, fontFamily: "mono", fontSize: 20}}>Scanning....</Text>}
     </View>
   );
 }
